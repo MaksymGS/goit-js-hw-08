@@ -5,10 +5,7 @@ fbForm.addEventListener('input', throttle(handlerForm, 500));
 fbForm.addEventListener('submit', handlerSubmit);
 
 let formData
-try {formData = JSON.parse(localStorage.getItem('feedback-form-state')) ?? {
-  email: "",
-  message: ""
-};
+try {formData = JSON.parse(localStorage.getItem('feedback-form-state')) ?? {};
   } catch (error) {
    console.log(error.message);
 }
