@@ -1,20 +1,29 @@
-const emailInput = document.querySelector("input");
-const textInput = document.querySelector("textarea");
+import throttle from 'lodash.throttle';
+const fbForm = document.querySelector('.feedback-form');
+fbForm.addEventListener('input', throttle(handlerForm, 500));
+fbForm.addEventListener('submit', handlerSubmit);
 
-console.log(textInput);
-console.log(emailInput);
+let formData;
+try {
+  formData = JSON.parse(localStorage.getItem('feedback-form-state')) ?? {
+    email: '',
+    message: '',
+  };
+} catch (error) {
+  console.log(error.message);
+}
+const { email, message } = fbForm.elements;
+email.value = formData.email;
+message.value = formData.message;
 
-const form = {
-email: "",
-textarea: "",
-};
-localStorage.setItem('feedback-form-state', form)
-
-emailInput.addEventListener("input", (event) => {
-    form.email = event.currentTarget.value;
-  console.log(event.currentTarget.value);
-});
-textInput.addEventListener("input", (event) => {
-    form.textarea = event.currentTarget.value;
-  console.log(event.currentTarget.value);
-});
+function handlerForm(evt) {
+  evt.preventDefault();
+  formData[evt.target.name] = evt.target.value;
+  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+}
+function handlerSubmit(evt) {
+  evt.preventDefault();
+  console.log(formData);
+  fbForm.reset();
+  localStorage.removeItem('feedback-form-state');
+}
